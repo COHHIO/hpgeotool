@@ -30,12 +30,17 @@ shinyServer(function(input, output) {
                     method = 'census',
                     full_results = TRUE,
                     return_type = 'geographies'
-                )
-            
-            refinements <- census_full %>%
+                ) %>%
                 select(singlelineaddress,
                        matchedAddress,
-                       starts_with("addressComponents")) %>%
+                       starts_with("addressComponents"),
+                       `geographies.2010 Census Blocks`) %>%
+                unnest('geographies.2010 Census Blocks')
+            
+            the_geocode <- census_full %>% pull(GEOID)
+                
+            
+            insufficient_address <- census_full %>%
                 mutate(
                     DifferentStreetName = if_else(length(
                         unique(addressComponents.streetName)
@@ -85,13 +90,11 @@ shinyServer(function(input, output) {
                 pull(WhatToCheck) %>%
                 unique() %>%
                 str_squish()
-            
-            
-            if (refinements == "Please check your") {
-                as.data.frame(census_full$`geographies.Census Tracts`) %>%
-                    pull(GEOID)
+
+            if (insufficient_address == "Please check your") {
+                print(the_geocode)
             } else {
-                print(refinements)
+                print(insufficient_address)
             }
         })
     })
