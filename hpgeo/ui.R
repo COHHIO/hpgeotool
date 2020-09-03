@@ -1,31 +1,27 @@
+# COHHIO_HMIS
+# Copyright (C) 2020  Coalition on Homelessness and Housing in Ohio (COHHIO)
 #
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# any later version.
 #
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details at
+# <https://www.gnu.org/licenses/>.
 
 library(shiny)
 
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
-
-    # Application title
     titlePanel("Emergency Rental Assistance Prioritization Tool"),
-
-    # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
             textInput("address",
-                        "Enter full address:"),
+                      "Enter full address:"),
             actionButton("go", "Submit")
         ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            textOutput("Percentile")
-        )
+        mainPanel(textOutput("Percentile"))
     )
 ))
