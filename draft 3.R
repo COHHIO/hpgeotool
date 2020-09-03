@@ -3,11 +3,19 @@ library(DT)
 library(dplyr)
 library(tidygeocoder)
 
-address_single1 <- tibble(singlelineaddress = c('11 Wall St, NY, NY', 
-                                               '600 Peachtree Street NE, Atlanta, Georgia'))
+address_single2 <- tibble(singlelineaddress = "605 N High St, Columbus, Ohio 43215")
 
-address_single2 <- tibble(singlelineaddress = "605 N High St, Columbus, Ohio")
+census_full1 <-
+  address_single2 %>%
+  geocode(
+    address = singlelineaddress,
+    method = 'census',
+    full_results = TRUE,
+    return_type = 'geographies'
+  )
 
-census_full1 <- address_single1 %>% geocode(address = singlelineaddress, 
-                                           method = 'census', full_results = TRUE, return_type = 'geographies')
+tracts_df <- as.data.frame(census_full1$`geographies.Census Tracts`)
+
+blocks_df <- as.data.frame(census_full1$`geographies.2010 Census Blocks`)
+
 glimpse(census_full1)
