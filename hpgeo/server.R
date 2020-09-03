@@ -21,7 +21,7 @@ shinyServer(function(input, output) {
     observeEvent(c(input$go), {
         
         output$Percentile <- renderText({
-            address <- tibble(singlelineaddress = c(input$address))
+            isolate(address <- tibble(singlelineaddress = c(input$address)))
             
             census_full <-
                 address %>%
@@ -96,7 +96,8 @@ shinyServer(function(input, output) {
                 print(insufficient_address)
             }
         })
-    })
+    }, 
+    ignoreInit = TRUE)
 })
 
 
