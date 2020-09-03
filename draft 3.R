@@ -1,6 +1,7 @@
 library(tibble)
 library(dplyr)
 library(tidygeocoder)
+library(stringr)
 
 address <- tibble(singlelineaddress = "6576 Borr Ave, Columbus, OH 43068")
 
@@ -31,20 +32,26 @@ census_full <-
                                   "ZIP Code", NULL),
            WhatToCheck = paste("Please check your", 
                                na.omit(DifferentStreetName),
-                               DifferentStreetSuffix,
-                               DifferentSuffixQualifier,
-                               DifferentSuffixDirection,
-                               DifferentCity, 
-                               DifferentState,
-                               DifferentZIP)
+                               na.omit(DifferentStreetSuffix),
+                               na.omit(DifferentSuffixQualifier),
+                               na.omit(DifferentSuffixDirection),
+                               na.omit(DifferentCity),
+                               na.omit(DifferentState),
+                               na.omit(DifferentZIP))
            ) %>%
     pull(WhatToCheck) %>%
-    unique()
-
-tracts_df <- if(refinements == "Please check your NA NA NA NA NA NA NA") {
-  as.data.frame(census_full$`geographies.Census Tracts`)
+    unique() %>%
+    str_squish()
+  
+  
+  if (refinements == "Please check your") {
+    as.data.frame(census_full$`geographies.Census Tracts`) %>%
+      pull(GEOID)
+  } else {
+    refinements
   }
 
-tract_no <- tracts_df %>%
-  pull(GEOID)
+  
+  
+  # Urban Institute. 2020. Rental Assistance Priority Index. Accessible from https://datacatalog.urban.org/dataset/rental-assistance-priority-index. Data originally sourced from 2014-18 ACS, July 2020 update of the Urban Institute’s “Where Low-Income Jobs Are Being Lost to COVID-19” data tool, and the 2012–16 US Department of Housing and Urban Developments Comprehensive Housing Affordability Strategy data data . Developed at the Urban Institute, and made available under the ODC-BY 1.0 Attribution License.
 
