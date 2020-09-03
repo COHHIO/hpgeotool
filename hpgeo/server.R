@@ -8,19 +8,219 @@
 #
 
 library(shiny)
+library(tidyverse)
+library(tidygeocoder)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-
-    output$distPlot <- renderPlot({
-
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-
+    observeEvent(c(input$go), {
+        output$Percentile <- renderText({
+            address <- tibble(singlelineaddress = c(input$address))
+        
+        census_full <-
+            address %>%
+            geocode(
+                address = singlelineaddress,
+                method = 'census',
+                full_results = TRUE,
+                return_type = 'geographies'
+            )
+        
+        refinements <- census_full %>%
+            select(singlelineaddress,
+                   matchedAddress,
+                   starts_with("addressComponents")) %>%
+            mutate(
+                DifferentStreetName = if_else(length(
+                    unique(addressComponents.streetName)
+                ) > 1,
+                "Street Name", NULL),
+                DifferentStreetSuffix = if_else(
+                    length(unique(addressComponents.suffixType)) > 1,
+                    "Street Suffix (for example: Ave, Street, Way)",
+                    NULL
+                ),
+                DifferentSuffixDirection = if_else(
+                    length(unique(
+                        addressComponents.suffixDirection
+                    )) > 1,
+                    "Street Direction (for example: N, W)",
+                    NULL
+                ),
+                DifferentSuffixQualifier = if_else(length(
+                    unique(addressComponents.suffixQualifier)
+                ) > 1,
+                "Suffix Qualifier", NULL),
+                DifferentCity = if_else(length(unique(
+                    addressComponents.city
+                )) > 1,
+                "City", NULL),
+                DifferentState = if_else(length(
+                    unique(addressComponents.state)
+                ) > 1,
+                "State", NULL),
+                DifferentZIP = if_else(length(unique(
+                    addressComponents.zip
+                )) > 1,
+                "ZIP Code", NULL),
+                WhatToCheck = paste(
+                    "Please check your",
+                    na.omit(DifferentStreetName),
+                    na.omit(DifferentStreetSuffix),
+                    na.omit(DifferentSuffixQualifier),
+                    na.omit(DifferentSuffixDirection),
+                    na.omit(DifferentCity),
+                    na.omit(DifferentState),
+                    na.omit(DifferentZIP)
+                )
+            ) %>%
+            pull(WhatToCheck) %>%
+            unique() %>%
+            str_squish()
+        
+        
+        if (refinements == "Please check your") {
+            as.data.frame(census_full$`geographies.Census Tracts`) %>%
+                pull(GEOID)
+        } else {
+            refinements
+        }
     })
-
+    })
+    #
+    #
+    
+    #
+    # geocode <- eventReactive(
+    #     input$go,
+    #     {
+    #         address <-
+    #             tibble(singlelineaddress = input$address)
+    #
+    #         census_full <-
+    #             address %>%
+    #             geocode(
+    #                 address = singlelineaddress,
+    #                 method = 'census',
+    #                 full_results = TRUE,
+    #                 return_type = 'geographies'
+    #             )
+    #
+    #         refinements <- census_full %>%
+    #             select(singlelineaddress,
+    #                    matchedAddress,
+    #                    starts_with("addressComponents")) %>%
+    #             mutate(
+    #                 DifferentStreetName = if_else(length(
+    #                     unique(addressComponents.streetName)
+    #                 ) > 1,
+    #                 "Street Name", NULL),
+    #                 DifferentStreetSuffix = if_else(
+    #                     length(unique(addressComponents.suffixType)) > 1,
+    #                     "Street Suffix (for example: Ave, Street, Way)",
+    #                     NULL
+    #                 ),
+    #                 DifferentSuffixDirection = if_else(
+    #                     length(unique(addressComponents.suffixDirection)) > 1,
+    #                     "Street Direction (for example: N, W)",
+    #                     NULL
+    #                 ),
+    #                 DifferentSuffixQualifier = if_else(length(
+    #                     unique(addressComponents.suffixQualifier)
+    #                 ) > 1,
+    #                 "Suffix Qualifier", NULL),
+    #                 DifferentCity = if_else(length(unique(
+    #                     addressComponents.city
+    #                 )) > 1,
+    #                 "City", NULL),
+    #                 DifferentState = if_else(length(unique(
+    #                     addressComponents.state
+    #                 )) > 1,
+    #                 "State", NULL),
+    #                 DifferentZIP = if_else(length(unique(
+    #                     addressComponents.zip
+    #                 )) > 1,
+    #                 "ZIP Code", NULL),
+    #                 WhatToCheck = paste(
+    #                     "Please check your",
+    #                     na.omit(DifferentStreetName),
+    #                     na.omit(DifferentStreetSuffix),
+    #                     na.omit(DifferentSuffixQualifier),
+    #                     na.omit(DifferentSuffixDirection),
+    #                     na.omit(DifferentCity),
+    #                     na.omit(DifferentState),
+    #                     na.omit(DifferentZIP)
+    #                 )
+    #             ) %>%
+    #             pull(WhatToCheck) %>%
+    #             unique() %>%
+    #             str_squish()
+    #
+    #
+    #         if (refinements == "Please check your") {
+    #             as.data.frame(census_full$`geographies.Census Tracts`) %>%
+    #                 pull(GEOID)
+    #         } else {
+    #             refinements
+    #         }
+    # })
+    #
+    # output$Percentile <- renderText({
+    #     print(geocode)
+    # })
 })
+
+# output$Percentile <- renderText({
+#     input$go
+#
+#     full_address <- tibble(singlelineaddress = c(isolate(input$address)))
+#
+#     census_full <-
+#         full_address %>%
+#         geocode(
+#             address = singlelineaddress,
+#             method = 'census',
+#             full_results = TRUE,
+#             return_type = 'geographies'
+#         )
+#
+#     refinements <- census_full %>%
+#         select(singlelineaddress, starts_with("addressComponents")) %>%
+#         mutate(DifferentStreetName = if_else(length(unique(addressComponents.streetName)) > 1,
+#                                              "Street Name", NULL),
+#                DifferentStreetSuffix = if_else(length(unique(addressComponents.suffixType)) > 1,
+#                                                "Street Suffix (for example: Ave, Street, Way)", NULL),
+#                DifferentSuffixDirection = if_else(length(unique(addressComponents.suffixDirection)) > 1,
+#                                                   "Street Direction (for example: N, W)", NULL),
+#                DifferentSuffixQualifier = if_else(length(unique(addressComponents.suffixQualifier)) > 1,
+#                                                   "Suffix Qualifier", NULL),
+#                DifferentCity = if_else(length(unique(addressComponents.city)) > 1,
+#                                        "City", NULL),
+#                DifferentState = if_else(length(unique(addressComponents.state)) > 1,
+#                                         "State", NULL),
+#                DifferentZIP = if_else(length(unique(addressComponents.zip)) > 1,
+#                                       "ZIP Code", NULL),
+#                WhatToCheck = paste("Please check your",
+#                                    na.omit(DifferentStreetName),
+#                                    na.omit(DifferentStreetSuffix),
+#                                    na.omit(DifferentSuffixQualifier),
+#                                    na.omit(DifferentSuffixDirection),
+#                                    na.omit(DifferentCity),
+#                                    na.omit(DifferentState),
+#                                    na.omit(DifferentZIP))
+#         ) %>%
+#         pull(WhatToCheck) %>%
+#         unique()
+#
+#     if (str_squish(refinements) == "Please check your") {
+#         as.data.frame(census_full$`geographies.Census Tracts`) %>%
+#             pull(GEOID)
+#     } else {
+#         str_squish(refinements)
+#     }
+#
+#
+#
+# })
+
+# })
