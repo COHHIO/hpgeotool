@@ -17,7 +17,19 @@ library(shiny)
 library(shinyWidgets)
 library(tidyverse)
 library(tidygeocoder)
+library(scales)
 
 index <- read_csv("housing_index_state_adj.csv") %>%
-  select(GEOID, total_index_quantile)
+  select(
+    GEOID,
+    state_name,
+    total_index_quantile,
+    housing_index_quantile,
+    covid_index_quantile,
+    equity_index_quantile,
+    housing_index,
+    covid_index,
+    equity_index,
+    total_index
+  )
 

@@ -20,17 +20,16 @@ dashboardPage(
                   "Enter full address:"),
         actionButton("go", "Submit")
     ),
-    dashboardBody(textOutput("Percentile"))
+    dashboardBody(
+        infoBoxOutput("Housing",
+                      width = 6),
+        infoBoxOutput("COVID19",
+                      width = 6),
+        infoBoxOutput("Equity",
+                      width = 6),
+        infoBoxOutput("Percentile",
+                      width = 6),
+    )
 )
 
-# shinyUI(fluidPage(
-#     titlePanel("Emergency Rental Assistance Prioritization Tool"),
-#     sidebarLayout(
-#         sidebarPanel(
-#             textInput("address",
-#                       "Enter full address:"),
-#             actionButton("go", "Submit")
-#         ),
-#         mainPanel(textOutput("Percentile"))
-#     )
-# ))
+
