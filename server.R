@@ -12,10 +12,6 @@
 # GNU Affero General Public License for more details at
 # <https://www.gnu.org/licenses/>.
 
-library(shiny)
-library(tidyverse)
-library(tidygeocoder)
-
 shinyServer(function(input, output) {
     
     observeEvent(c(input$go), {
