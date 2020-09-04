@@ -12,7 +12,9 @@
 # GNU Affero General Public License for more details at
 # <https://www.gnu.org/licenses/>.
 
+library(shinydashboard)
 library(shiny)
+library(shinyWidgets)
 library(tidyverse)
 library(tidygeocoder)
 

@@ -12,14 +12,25 @@
 # GNU Affero General Public License for more details at
 # <https://www.gnu.org/licenses/>.
 
-shinyUI(fluidPage(
-    titlePanel("Emergency Rental Assistance Prioritization Tool"),
-    sidebarLayout(
-        sidebarPanel(
-            textInput("address",
-                      "Enter full address:"),
-            actionButton("go", "Submit")
-        ),
-        mainPanel(textOutput("Percentile"))
-    )
-))
+dashboardPage(
+    skin = "purple",
+    dashboardHeader(title = "ERA Prioritization Tool"),
+    dashboardSidebar(
+        textInput("address",
+                  "Enter full address:"),
+        actionButton("go", "Submit")
+    ),
+    dashboardBody(textOutput("Percentile"))
+)
+
+# shinyUI(fluidPage(
+#     titlePanel("Emergency Rental Assistance Prioritization Tool"),
+#     sidebarLayout(
+#         sidebarPanel(
+#             textInput("address",
+#                       "Enter full address:"),
+#             actionButton("go", "Submit")
+#         ),
+#         mainPanel(textOutput("Percentile"))
+#     )
+# ))
