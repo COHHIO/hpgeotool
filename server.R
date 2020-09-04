@@ -35,12 +35,17 @@ shinyServer(function(input, output) {
                        matchedAddress,
                        starts_with("addressComponents"),
                        `geographies.2010 Census Blocks`) %>%
-                unnest('geographies.2010 Census Blocks')
+                unnest('geographies.2010 Census Blocks') %>%
+                mutate(GEOID = substr(GEOID, 1, 11))
 
             if (nrow(census_full) == 1) {
                 the_geocode <- census_full %>% pull(GEOID)
                 
-                print(the_geocode)
+                percentile <- index %>%
+                    filter(GEOID == the_geocode) %>%
+                    pull(total_index_quantile)
+                
+                percentile
             } else {
                 insufficient_address <- census_full %>%
                     mutate(

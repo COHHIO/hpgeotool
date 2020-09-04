@@ -2,6 +2,8 @@
 library(tidyverse)
 library(tidygeocoder)
 
+index <- read_csv("housing_index_state_adj.csv") %>%
+  select(GEOID, total_index_quantile)
 
 address <- tibble(singlelineaddress = c("6576 Borr Ave, Reynoldsburg, OH 43068"))
 
@@ -17,13 +19,20 @@ census_full <-
          matchedAddress,
          starts_with("addressComponents"),
          `geographies.2010 Census Blocks`) %>%
-  unnest('geographies.2010 Census Blocks')
+  unnest('geographies.2010 Census Blocks') %>%
+  mutate(GEOID = substr(GEOID, 1, 11))
 
 if (nrow(census_full) == 1) {
   the_geocode <- census_full %>% pull(GEOID)
   
-  print(the_geocode)
-} else {
+  percentile <- index %>%
+    filter(GEOID == the_geocode) %>%
+    select("Census Tract" = GEOID, "Percentile" = total_index_quantile)
+  
+  percentile
+  
+
+  } else {
   insufficient_address <- census_full %>%
     mutate(
       DifferentStreetName = if_else(length(
