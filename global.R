@@ -26,10 +26,6 @@ index <- read_csv("housing_index_state_adj.csv") %>%
     total_index_quantile,
     housing_index_quantile,
     covid_index_quantile,
-    equity_index_quantile,
-    housing_index,
-    covid_index,
-    equity_index,
-    total_index
+    equity_index_quantile
   )
 

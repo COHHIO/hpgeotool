@@ -28,7 +28,7 @@ dashboardPage(
         infoBoxOutput("Equity",
                       width = 6),
         infoBoxOutput("Percentile",
-                      width = 6),
+                      width = 6)
     )
 )
 
