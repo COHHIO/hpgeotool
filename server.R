@@ -45,8 +45,7 @@ shinyServer(function(input, output) {
                         title = "Housing Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(housing_index_quantile) %>%
-                            percent(), 
+                            pull(housing_index_quantile), 
                         icon = icon("house-user"))
             } else {
                 insufficient_address <- census_full %>%
@@ -133,8 +132,7 @@ shinyServer(function(input, output) {
                         title = "COVID-19 Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(covid_index_quantile) %>%
-                            percent(), 
+                            pull(covid_index_quantile), 
                         icon = icon("virus"))
             } else {
                 insufficient_address <- census_full %>%
@@ -221,8 +219,7 @@ shinyServer(function(input, output) {
                         title = "Equity Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(equity_index_quantile) %>%
-                            percent(), 
+                            pull(equity_index_quantile), 
                         icon = icon("balance-scale-left"))
             } else {
                 insufficient_address <- census_full %>%
@@ -309,8 +306,7 @@ shinyServer(function(input, output) {
                         title = "Total Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(total_index_quantile) %>%
-                            percent(), 
+                            pull(total_index_quantile), 
                         icon = icon("map-marker-alt"))
             } else {
                 insufficient_address <- census_full %>%

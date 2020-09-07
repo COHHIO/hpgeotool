@@ -17,7 +17,6 @@ library(shiny)
 library(shinyWidgets)
 library(tidyverse)
 library(tidygeocoder)
-library(scales)
 
 index <- read_csv("housing_index_state_adj.csv") %>%
   select(
@@ -27,5 +26,11 @@ index <- read_csv("housing_index_state_adj.csv") %>%
     housing_index_quantile,
     covid_index_quantile,
     equity_index_quantile
+  ) %>%
+  mutate(
+    total_index_quantile = paste0(total_index_quantile * 100, "th percentile"),
+    housing_index_quantile = paste0(housing_index_quantile * 100, "th percentile"),
+    covid_index_quantile = paste0(covid_index_quantile * 100, "th percentile"),
+    equity_index_quantile = paste0(equity_index_quantile * 100, "th percentile")
   )
 
