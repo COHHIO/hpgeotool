@@ -46,7 +46,7 @@ shinyServer(function(input, output) {
         and the 2012–16 US Department of Housing and Urban Developments 
         Comprehensive Housing Affordability Strategy data data. 
         Developed at the Urban Institute, and made available under the ODC-BY 
-        1.0 Attribution License. 
+        1.0 Attribution License. <br>
         <p>Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan McPherson 
         (2020). <a href=\"https://CRAN.R-project.org/package=shiny\">shiny</a>: 
         Web Application Framework for R. R package version 1.5.0. </p>
