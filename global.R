@@ -28,9 +28,45 @@ index <- read_csv("housing_index_state_adj.csv") %>%
     equity_index_quantile
   ) %>%
   mutate(
-    total_index_quantile = paste0(total_index_quantile * 100, "th percentile"),
-    housing_index_quantile = paste0(housing_index_quantile * 100, "th percentile"),
-    covid_index_quantile = paste0(covid_index_quantile * 100, "th percentile"),
-    equity_index_quantile = paste0(equity_index_quantile * 100, "th percentile")
+    total_index_quantile = case_when(
+      (total_index_quantile * 100) %% 10 == 1 ~
+        paste0(total_index_quantile * 100, "st percentile"),
+      (total_index_quantile * 100) %% 10 == 2 ~
+        paste0(total_index_quantile * 100, "nd percentile"),
+      (total_index_quantile * 100) %% 10 == 3 ~
+        paste0(total_index_quantile * 100, "rd percentile"),
+      TRUE ~
+        paste0(total_index_quantile * 100, "th percentile")
+    ), 
+    housing_index_quantile = case_when(
+      (housing_index_quantile * 100) %% 10 == 1 ~
+        paste0(housing_index_quantile * 100, "st percentile"),
+      (housing_index_quantile * 100) %% 10 == 2 ~
+        paste0(housing_index_quantile * 100, "nd percentile"),
+      (housing_index_quantile * 100) %% 10 == 3 ~
+        paste0(housing_index_quantile * 100, "rd percentile"),
+      TRUE ~
+        paste0(housing_index_quantile * 100, "th percentile")
+    ), 
+    covid_index_quantile = case_when(
+      (covid_index_quantile * 100) %% 10 == 1 ~
+        paste0(covid_index_quantile * 100, "st percentile"),
+      (covid_index_quantile * 100) %% 10 == 2 ~
+        paste0(covid_index_quantile * 100, "nd percentile"),
+      (covid_index_quantile * 100) %% 10 == 3 ~
+        paste0(covid_index_quantile * 100, "rd percentile"),
+      TRUE ~
+        paste0(covid_index_quantile * 100, "th percentile")
+    ), 
+    equity_index_quantile = case_when(
+      (equity_index_quantile * 100) %% 10 == 1 ~
+        paste0(equity_index_quantile * 100, "st percentile"),
+      (equity_index_quantile * 100) %% 10 == 2 ~
+        paste0(equity_index_quantile * 100, "nd percentile"),
+      (equity_index_quantile * 100) %% 10 == 3 ~
+        paste0(equity_index_quantile * 100, "rd percentile"),
+      TRUE ~
+        paste0(equity_index_quantile * 100, "th percentile")
+    )
   )
 
