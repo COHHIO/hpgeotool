@@ -16,10 +16,18 @@ dashboardPage(
     skin = "purple",
     dashboardHeader(title = "ERA Prioritization Tool"),
     dashboardSidebar(
+        width = 300,
         textInput("address",
                   "Enter full address:"),
         actionButton("go", "Submit"),
-        width = 300
+        br(),
+        br(),
+        br(),
+        br(),
+        HTML(paste0(
+            "&emsp;&emsp;&emsp;Made by <br>&emsp;&emsp;<img src=\"COHHIOlogo_white.png\" 
+            alt=\"COHHIO logo\" width=\"80\" height=\"80\"> "
+        ))
     ),
     dashboardBody(fluidRow(
         box(
