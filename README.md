@@ -15,6 +15,4 @@ Winston Chang and Barbara Borges Ribeiro (2018). [shinydashboard](https://CRAN.R
 Jesse Cambon (2020). [tidygeocoder](https://CRAN.R-project.org/package=tidygeocoder): Geocoding Made Easy. R package version 1.0.1.
 
 Wickham et al., (2019). Welcome to the [tidyverse](https://doi.org/10.21105/joss.01686). Journal of Open Source Software, 4(43), 1686
-  
-Hadley Wickham and Dana Seidel (2020). [scales](https://CRAN.R-project.org/package=scales): Scale Functions for Visualization. R package version 1.1.1. 
 
