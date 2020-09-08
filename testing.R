@@ -75,3 +75,11 @@ if (nomatch == "ok" & nrow(census_full) > 1) {
     print(nomatch)
   }
 
+nrow(
+  census_full <-
+    address %>%
+    geocode(
+      address = singlelineaddress
+    )
+) == 1 &
+  !is.na(census_full$lat[1])
