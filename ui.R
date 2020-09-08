@@ -40,21 +40,21 @@ dashboardPage(
         title = "Instructions",
         collapsible = TRUE,
         collapsed = FALSE,
-        width = 12
+        width = 6
     )),
     fluidRow(box(
         uiOutput("aboutText"),
         title = "About",
         collapsible = TRUE,
         collapsed = TRUE,
-        width = 12
+        width = 6
     )),
     fluidRow(box(
         uiOutput("citationsText"),
         title = "Citations",
         collapsible = TRUE,
         collapsed = TRUE,
-        width = 12
+        width = 6
     )))
 )
 
