@@ -18,18 +18,23 @@ dashboardPage(
     dashboardSidebar(
         textInput("address",
                   "Enter full address:"),
-        actionButton("go", "Submit")
+        actionButton("go", "Submit"),
+        width = 300
     ),
-    dashboardBody(
-        infoBoxOutput("Housing",
-                      width = 6),
-        infoBoxOutput("COVID19",
-                      width = 6),
-        infoBoxOutput("Equity",
-                      width = 6),
-        infoBoxOutput("Percentile",
-                      width = 6)
-    )
+    dashboardBody(fluidRow(
+        box(
+            title = "Indices Within Your State",
+            width = 12,
+            infoBoxOutput("Percentile",
+                          width = 6),
+            infoBoxOutput("Housing",
+                          width = 6),
+            infoBoxOutput("COVID19",
+                          width = 6),
+            infoBoxOutput("Equity",
+                          width = 6)
+        )
+    ))
 )
 
 
