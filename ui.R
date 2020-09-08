@@ -23,7 +23,6 @@ dashboardPage(
     ),
     dashboardBody(fluidRow(
         box(
-            title = "Indices Within Your State",
             width = 6,
             uiOutput("Percentile",
                           width = 6),

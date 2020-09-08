@@ -40,7 +40,7 @@ shinyServer(function(input, output) {
     output$citationsText <- renderUI(
         HTML("Urban Institute. 2020. Rental Assistance Priority Index. 
         Accessible from 
-        <a href = \"https://datacatalog.urban.org/dataset/rental-assistance-priority-index\"></a>. 
+        <a href = \"https://datacatalog.urban.org/dataset/rental-assistance-priority-index\">here</a>. 
         Data originally sourced from 2014-18 ACS, July 2020 update of the Urban 
         Institute’s “Where Low-Income Jobs Are Being Lost to COVID-19” data tool, 
         and the 2012–16 US Department of Housing and Urban Developments 
@@ -58,7 +58,7 @@ shinyServer(function(input, output) {
         <p>Wickham et al., (2019). Welcome to the 
         <a href=\"https://doi.org/10.21105/joss.01686\">tidyverse</a>. Journal 
         of Open Source Software, 4(43), 1686</p>
-        <p>Please send inquiries to the COHHIO <a href = \"mailto:hmis@cohhio.org.\">HMIS team</a>.")
+        <p>Please send inquiries to the <a href = \"mailto:hmis@cohhio.org.\">COHHIO HMIS team</a>.")
     )
     
     observeEvent(c(input$go), {
