@@ -1,4 +1,4 @@
-address <- tibble(singlelineaddress = c("6576 borr ave columbus oh 43068"))
+address <- tibble(singlelineaddress = c(""))
 
 census_full <-
   address %>%
