@@ -34,7 +34,28 @@ dashboardPage(
             uiOutput("Equity",
                           width = 6)
         )
-    ))
+    ),
+    fluidRow(box(
+        uiOutput("instructionsText"),
+        title = "Instructions",
+        collapsible = TRUE,
+        collapsed = FALSE,
+        width = 12
+    )),
+    fluidRow(box(
+        uiOutput("aboutText"),
+        title = "About",
+        collapsible = TRUE,
+        collapsed = TRUE,
+        width = 12
+    )),
+    fluidRow(box(
+        uiOutput("citationsText"),
+        title = "Citations",
+        collapsible = TRUE,
+        collapsed = TRUE,
+        width = 12
+    )))
 )
 
 

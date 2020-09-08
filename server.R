@@ -14,6 +14,53 @@
 
 shinyServer(function(input, output) {
     
+    output$aboutText <- renderUI(
+        HTML("This tool was built by COHHIO and is using the data from the Urban
+        Institute's 
+        <a href = \"https://www.urban.org/features/where-prioritize-emergency-rental-assistance-keep-renters-their-homes\">ERA Prioritization Tool</a>. 
+        The Ohio Balance of State CoC is incorporating the Indices into our 
+        targeting and prioritization process for our Homelessness Prevention and 
+        Emergency Rental Assistance projects. We needed our case managers to be able
+        to find the Index for a specific household in a very user-friendly way.
+        <p>Of course any CoC in the US may use this tool as it includes the data
+        from each state. We plan to maintain it until there is something better or
+        it is not needed by anyone.
+             <p>For more information about incorporating Racial Equity into the 
+             implementation of your ESG-CV dollars, please visit 
+             <a href =\"https://housingequityframework.org/\">housingequityframework.org</a>."
+    ))
+    
+    output$instructionsText <- renderUI(
+        HTML("Enter a complete and correct address into the left sidebar and click 
+             Submit. If you do not see the left sidebar, click the triple-line 
+             button above. Depending on the address, it may take up to 10 seconds
+             to see a result so please be patient."
+        ))
+    
+    output$citationsText <- renderUI(
+        HTML("Urban Institute. 2020. Rental Assistance Priority Index. 
+        Accessible from 
+        <a href = \"https://datacatalog.urban.org/dataset/rental-assistance-priority-index\"></a>. 
+        Data originally sourced from 2014-18 ACS, July 2020 update of the Urban 
+        Institute’s “Where Low-Income Jobs Are Being Lost to COVID-19” data tool, 
+        and the 2012–16 US Department of Housing and Urban Developments 
+        Comprehensive Housing Affordability Strategy data data. 
+        Developed at the Urban Institute, and made available under the ODC-BY 
+        1.0 Attribution License. 
+        <p>Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan McPherson 
+        (2020). <a href=\"https://CRAN.R-project.org/package=shiny\">shiny</a>: 
+        Web Application Framework for R. R package version 1.5.0. </p>
+        <p>Winston Chang and Barbara Borges Ribeiro (2018). 
+        <a href=\"https://CRAN.R-project.org/package=shinydashboard\">shinydashboard</a>: 
+        Create Dashboards with &#39;Shiny&#39;. R package version 0.7.1. </p>
+        <p>Jesse Cambon (2020). <a href=\"https://CRAN.R-project.org/package=tidygeocoder\">tidygeocoder</a>: 
+        Geocoding Made Easy. R package version 1.0.1.</p>
+        <p>Wickham et al., (2019). Welcome to the 
+        <a href=\"https://doi.org/10.21105/joss.01686\">tidyverse</a>. Journal 
+        of Open Source Software, 4(43), 1686</p>
+        <p>Please send inquiries to the COHHIO <a href = \"mailto:hmis@cohhio.org.\">HMIS team</a>.")
+    )
+    
     observeEvent(c(input$go), {
         
         output$Housing <- if ({
