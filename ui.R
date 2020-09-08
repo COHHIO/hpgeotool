@@ -24,14 +24,14 @@ dashboardPage(
     dashboardBody(fluidRow(
         box(
             title = "Indices Within Your State",
-            width = 12,
-            infoBoxOutput("Percentile",
+            width = 6,
+            uiOutput("Percentile",
                           width = 6),
-            infoBoxOutput("Housing",
+            uiOutput("Housing",
                           width = 6),
-            infoBoxOutput("COVID19",
+            uiOutput("COVID19",
                           width = 6),
-            infoBoxOutput("Equity",
+            uiOutput("Equity",
                           width = 6)
         )
     ))
