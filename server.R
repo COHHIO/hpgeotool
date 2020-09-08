@@ -256,7 +256,7 @@ shinyServer(function(input, output) {
                         title = nomatch,
                         subtitle = " Check your address and try again.",
                         icon = icon("times"),
-                        color = "fuchsia", width = 12
+                        color = "fuchsia"
                     )
                 }
             }
