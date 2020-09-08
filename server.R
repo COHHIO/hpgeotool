@@ -17,9 +17,9 @@ shinyServer(function(input, output) {
     observeEvent(c(input$go), {
         
         output$Housing <- renderInfoBox({
-            
+
             isolate(address <- tibble(singlelineaddress = c(input$address)))
-            
+
             census_full <-
                 address %>%
                 geocode(
@@ -27,86 +27,38 @@ shinyServer(function(input, output) {
                     method = 'census',
                     full_results = TRUE,
                     return_type = 'geographies'
-                ) %>%
-                select(singlelineaddress,
-                       matchedAddress,
-                       starts_with("addressComponents"),
-                       `geographies.2010 Census Blocks`) %>%
+                )
+
+            nomatch <-  if_else(is.na(census_full$lat),
+                                "No match. Check your address and try again.",
+                                "ok")
+            nomatch <- nomatch[1]
+
+            if(nomatch == "ok") {census_full <- census_full %>%
                 unnest('geographies.2010 Census Blocks') %>%
-                mutate(GEOID = substr(GEOID, 1, 11))
-            
-            if (nrow(census_full) == 1) {
+                mutate(GEOID = substr(GEOID, 1, 11))}
+
+            if (nrow(census_full) == 1 & nomatch == "ok") {
                 the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>% 
+                your_state <- index %>%
                     filter(GEOID == the_geocode) %>%
                     pull(state_name)
-                
-                infoBox(subtitle = paste("Within", your_state), 
+
+                infoBox(subtitle = paste("Within", your_state),
                         title = "Housing Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(housing_index_quantile), 
+                            pull(housing_index_quantile),
                         icon = icon("house-user"))
             } else {
-                insufficient_address <- census_full %>%
-                    mutate(
-                        DifferentStreetName = if_else(length(
-                            unique(addressComponents.streetName)
-                        ) > 1,
-                        "Street Name", NULL),
-                        DifferentStreetSuffix = if_else(
-                            length(unique(
-                                addressComponents.suffixType
-                            )) > 1,
-                            "Street Suffix (for example: Ave, Street, Way)",
-                            NULL
-                        ),
-                        DifferentSuffixDirection = if_else(
-                            length(unique(
-                                addressComponents.suffixDirection
-                            )) > 1,
-                            "Street Direction (for example: N, W)",
-                            NULL
-                        ),
-                        DifferentSuffixQualifier = if_else(length(
-                            unique(addressComponents.suffixQualifier)
-                        ) > 1,
-                        "Suffix Qualifier", NULL),
-                        DifferentCity = if_else(length(
-                            unique(addressComponents.city)
-                        ) > 1,
-                        "City", NULL),
-                        DifferentState = if_else(length(
-                            unique(addressComponents.state)
-                        ) > 1,
-                        "State", NULL),
-                        DifferentZIP = if_else(length(
-                            unique(addressComponents.zip)
-                        ) > 1,
-                        "ZIP Code", NULL),
-                        WhatToCheck = paste(
-                            "Please check your",
-                            na.omit(DifferentStreetName),
-                            na.omit(DifferentStreetSuffix),
-                            na.omit(DifferentSuffixQualifier),
-                            na.omit(DifferentSuffixDirection),
-                            na.omit(DifferentCity),
-                            na.omit(DifferentState),
-                            na.omit(DifferentZIP)
-                        )
-                    ) %>%
-                    pull(WhatToCheck) %>%
-                    unique() %>%
-                    str_squish()
-                
-                print(insufficient_address)
+                infoBox(title = "")
             }
         })
-        
+
         output$COVID19 <- renderInfoBox({
-            
+
             isolate(address <- tibble(singlelineaddress = c(input$address)))
-            
+
             census_full <-
                 address %>%
                 geocode(
@@ -114,86 +66,38 @@ shinyServer(function(input, output) {
                     method = 'census',
                     full_results = TRUE,
                     return_type = 'geographies'
-                ) %>%
-                select(singlelineaddress,
-                       matchedAddress,
-                       starts_with("addressComponents"),
-                       `geographies.2010 Census Blocks`) %>%
+                )
+
+            nomatch <-  if_else(is.na(census_full$lat),
+                                "No match. Check your address and try again.",
+                                "ok")
+            nomatch <- nomatch[1]
+
+                        if(nomatch == "ok") {census_full <- census_full %>%
                 unnest('geographies.2010 Census Blocks') %>%
-                mutate(GEOID = substr(GEOID, 1, 11))
-            
-            if (nrow(census_full) == 1) {
+                mutate(GEOID = substr(GEOID, 1, 11))}
+
+            if (nrow(census_full) == 1 & nomatch == "ok") {
                 the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>% 
+                your_state <- index %>%
                     filter(GEOID == the_geocode) %>%
                     pull(state_name)
-                
-                infoBox(subtitle = paste("Within", your_state), 
+
+                infoBox(subtitle = paste("Within", your_state),
                         title = "COVID-19 Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(covid_index_quantile), 
+                            pull(covid_index_quantile),
                         icon = icon("virus"))
             } else {
-                insufficient_address <- census_full %>%
-                    mutate(
-                        DifferentStreetName = if_else(length(
-                            unique(addressComponents.streetName)
-                        ) > 1,
-                        "Street Name", NULL),
-                        DifferentStreetSuffix = if_else(
-                            length(unique(
-                                addressComponents.suffixType
-                            )) > 1,
-                            "Street Suffix (for example: Ave, Street, Way)",
-                            NULL
-                        ),
-                        DifferentSuffixDirection = if_else(
-                            length(unique(
-                                addressComponents.suffixDirection
-                            )) > 1,
-                            "Street Direction (for example: N, W)",
-                            NULL
-                        ),
-                        DifferentSuffixQualifier = if_else(length(
-                            unique(addressComponents.suffixQualifier)
-                        ) > 1,
-                        "Suffix Qualifier", NULL),
-                        DifferentCity = if_else(length(
-                            unique(addressComponents.city)
-                        ) > 1,
-                        "City", NULL),
-                        DifferentState = if_else(length(
-                            unique(addressComponents.state)
-                        ) > 1,
-                        "State", NULL),
-                        DifferentZIP = if_else(length(
-                            unique(addressComponents.zip)
-                        ) > 1,
-                        "ZIP Code", NULL),
-                        WhatToCheck = paste(
-                            "Please check your",
-                            na.omit(DifferentStreetName),
-                            na.omit(DifferentStreetSuffix),
-                            na.omit(DifferentSuffixQualifier),
-                            na.omit(DifferentSuffixDirection),
-                            na.omit(DifferentCity),
-                            na.omit(DifferentState),
-                            na.omit(DifferentZIP)
-                        )
-                    ) %>%
-                    pull(WhatToCheck) %>%
-                    unique() %>%
-                    str_squish()
-                
-                print(insufficient_address)
+                infoBox(title = "")
             }
         })
-        
+
         output$Equity <- renderInfoBox({
-            
+
             isolate(address <- tibble(singlelineaddress = c(input$address)))
-            
+
             census_full <-
                 address %>%
                 geocode(
@@ -201,85 +105,38 @@ shinyServer(function(input, output) {
                     method = 'census',
                     full_results = TRUE,
                     return_type = 'geographies'
-                ) %>%
-                select(singlelineaddress,
-                       matchedAddress,
-                       starts_with("addressComponents"),
-                       `geographies.2010 Census Blocks`) %>%
-                unnest('geographies.2010 Census Blocks') %>%
-                mutate(GEOID = substr(GEOID, 1, 11))
+                )
+
+            nomatch <-  if_else(is.na(census_full$lat),
+                                "No match. Check your address and try again.",
+                                "ok")
+            nomatch <- nomatch[1]
             
-            if (nrow(census_full) == 1) {
+            if(nomatch == "ok") {census_full <- census_full %>%
+                unnest('geographies.2010 Census Blocks') %>%
+                mutate(GEOID = substr(GEOID, 1, 11))}
+
+            if (nrow(census_full) == 1 & nomatch == "ok") {
                 the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>% 
+                your_state <- index %>%
                     filter(GEOID == the_geocode) %>%
                     pull(state_name)
-                
-                infoBox(subtitle = paste("Within", your_state), 
+
+                infoBox(subtitle = paste("Within", your_state),
                         title = "Equity Index",
                         index %>%
                             filter(GEOID == the_geocode) %>%
-                            pull(equity_index_quantile), 
+                            pull(equity_index_quantile),
                         icon = icon("balance-scale-left"))
             } else {
-                insufficient_address <- census_full %>%
-                    mutate(
-                        DifferentStreetName = if_else(length(
-                            unique(addressComponents.streetName)
-                        ) > 1,
-                        "Street Name", NULL),
-                        DifferentStreetSuffix = if_else(
-                            length(unique(
-                                addressComponents.suffixType
-                            )) > 1,
-                            "Street Suffix (for example: Ave, Street, Way)",
-                            NULL
-                        ),
-                        DifferentSuffixDirection = if_else(
-                            length(unique(
-                                addressComponents.suffixDirection
-                            )) > 1,
-                            "Street Direction (for example: N, W)",
-                            NULL
-                        ),
-                        DifferentSuffixQualifier = if_else(length(
-                            unique(addressComponents.suffixQualifier)
-                        ) > 1,
-                        "Suffix Qualifier", NULL),
-                        DifferentCity = if_else(length(
-                            unique(addressComponents.city)
-                        ) > 1,
-                        "City", NULL),
-                        DifferentState = if_else(length(
-                            unique(addressComponents.state)
-                        ) > 1,
-                        "State", NULL),
-                        DifferentZIP = if_else(length(
-                            unique(addressComponents.zip)
-                        ) > 1,
-                        "ZIP Code", NULL),
-                        WhatToCheck = paste(
-                            "Please check your",
-                            na.omit(DifferentStreetName),
-                            na.omit(DifferentStreetSuffix),
-                            na.omit(DifferentSuffixQualifier),
-                            na.omit(DifferentSuffixDirection),
-                            na.omit(DifferentCity),
-                            na.omit(DifferentState),
-                            na.omit(DifferentZIP)
-                        )
-                    ) %>%
-                    pull(WhatToCheck) %>%
-                    unique() %>%
-                    str_squish()
-                
-                print(insufficient_address)
+                infoBox(title = "")
             }
         })
         
         output$Percentile <- renderInfoBox({
             
-            isolate(address <- tibble(singlelineaddress = c(input$address)))
+            isolate(address <-
+                        tibble(singlelineaddress = c(input$address)))
             
             census_full <-
                 address %>%
@@ -288,79 +145,99 @@ shinyServer(function(input, output) {
                     method = 'census',
                     full_results = TRUE,
                     return_type = 'geographies'
-                ) %>%
-                select(singlelineaddress,
-                       matchedAddress,
-                       starts_with("addressComponents"),
-                       `geographies.2010 Census Blocks`) %>%
-                unnest('geographies.2010 Census Blocks') %>%
-                mutate(GEOID = substr(GEOID, 1, 11))
-
-            if (nrow(census_full) == 1) {
+                )
+            
+            nomatch <-  if_else(is.na(census_full$lat),
+                                "No match.",
+                                "ok")
+            nomatch <- nomatch[1]
+            
+            if (nomatch == "ok") {
+                census_full <- census_full %>%
+                    unnest('geographies.2010 Census Blocks') %>%
+                    mutate(GEOID = substr(GEOID, 1, 11))
+            }
+            
+            if (nrow(census_full) == 1 & nomatch == "ok") {
                 the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>% 
+                your_state <- index %>%
                     filter(GEOID == the_geocode) %>%
                     pull(state_name)
                 
-                infoBox(subtitle = paste("Within", your_state), 
-                        title = "Total Index",
-                        index %>%
-                            filter(GEOID == the_geocode) %>%
-                            pull(total_index_quantile), 
-                        icon = icon("map-marker-alt"))
+                infoBox(
+                    subtitle = paste("Within", your_state),
+                    title = "Total Index",
+                    index %>%
+                        filter(GEOID == the_geocode) %>%
+                        pull(total_index_quantile),
+                    icon = icon("map-marker-alt"),
+                    color = "black"
+                )
             } else {
-                insufficient_address <- census_full %>%
-                    mutate(
-                        DifferentStreetName = if_else(length(
-                            unique(addressComponents.streetName)
-                        ) > 1,
-                        "Street Name", NULL),
-                        DifferentStreetSuffix = if_else(
-                            length(unique(
-                                addressComponents.suffixType
+                if (nomatch == "ok" & nrow(census_full) > 1) {
+                    insufficient_address <- census_full %>%
+                        mutate(
+                            DifferentStreetName = if_else(length(
+                                unique(addressComponents.streetName)
+                            ) > 1,
+                            "Street Name", NULL),
+                            DifferentStreetSuffix = if_else(
+                                length(unique(addressComponents.suffixType)) > 1,
+                                "Street Suffix (for example: Ave, Street, Way)",
+                                NULL
+                            ),
+                            DifferentSuffixDirection = if_else(
+                                length(unique(
+                                    addressComponents.suffixDirection
+                                )) > 1,
+                                "Street Direction (for example: N, W)",
+                                NULL
+                            ),
+                            DifferentSuffixQualifier = if_else(length(
+                                unique(addressComponents.suffixQualifier)
+                            ) > 1,
+                            "Suffix Qualifier", NULL),
+                            DifferentCity = if_else(length(unique(
+                                addressComponents.city
                             )) > 1,
-                            "Street Suffix (for example: Ave, Street, Way)",
-                            NULL
-                        ),
-                        DifferentSuffixDirection = if_else(
-                            length(unique(
-                                addressComponents.suffixDirection
+                            "City", NULL),
+                            DifferentState = if_else(length(
+                                unique(addressComponents.state)
+                            ) > 1,
+                            "State", NULL),
+                            DifferentZIP = if_else(length(unique(
+                                addressComponents.zip
                             )) > 1,
-                            "Street Direction (for example: N, W)",
-                            NULL
-                        ),
-                        DifferentSuffixQualifier = if_else(length(
-                            unique(addressComponents.suffixQualifier)
-                        ) > 1,
-                        "Suffix Qualifier", NULL),
-                        DifferentCity = if_else(length(
-                            unique(addressComponents.city)
-                        ) > 1,
-                        "City", NULL),
-                        DifferentState = if_else(length(
-                            unique(addressComponents.state)
-                        ) > 1,
-                        "State", NULL),
-                        DifferentZIP = if_else(length(
-                            unique(addressComponents.zip)
-                        ) > 1,
-                        "ZIP Code", NULL),
-                        WhatToCheck = paste(
-                            "Please check your",
-                            na.omit(DifferentStreetName),
-                            na.omit(DifferentStreetSuffix),
-                            na.omit(DifferentSuffixQualifier),
-                            na.omit(DifferentSuffixDirection),
-                            na.omit(DifferentCity),
-                            na.omit(DifferentState),
-                            na.omit(DifferentZIP)
-                        )
-                    ) %>%
-                    pull(WhatToCheck) %>%
-                    unique() %>%
-                    str_squish()
-                
-                print(insufficient_address)
+                            "ZIP Code", NULL),
+                            WhatToCheck = paste(
+                                "Please check your",
+                                na.omit(DifferentStreetName),
+                                na.omit(DifferentStreetSuffix),
+                                na.omit(DifferentSuffixQualifier),
+                                na.omit(DifferentSuffixDirection),
+                                na.omit(DifferentCity),
+                                na.omit(DifferentState),
+                                na.omit(DifferentZIP)
+                            )
+                        ) %>%
+                        pull(WhatToCheck) %>%
+                        unique() %>%
+                        str_squish()
+                    
+                    infoBox(
+                        title = "Error",
+                        subtitle = print(insufficient_address),
+                        icon = icon("times"),
+                        color = "orange"
+                    )
+                } else{
+                    infoBox(
+                        title = nomatch,
+                        subtitle = " Check your address and try again.",
+                        icon = icon("times"),
+                        color = "fuchsia", width = 12
+                    )
+                }
             }
         })
     }, 
