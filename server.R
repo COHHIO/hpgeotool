@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
         <p>Of course any CoC in the US may use this tool as it includes the data
         from each state. We plan to maintain it until there is something better or
         it is not needed by anyone. The code for this Shiny app is available
-        <a href = \"https://github.com/COHHIO/hptool\">here</a>.
+        <a href = \"https://github.com/COHHIO/hpgeotool\">here</a>.
         <p>For more information about incorporating Racial Equity into the 
         implementation of your ESG-CV dollars, please visit 
         <a href =\"https://housingequityframework.org/\">housingequityframework.org</a>."
