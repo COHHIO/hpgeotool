@@ -14,7 +14,8 @@
 
 dashboardPage(
     skin = "purple",
-    dashboardHeader(title = "Homelessness Prevention Tool"),
+    dashboardHeader(title = "Homelessness Prevention Geographic Tool",
+                    titleWidth = 425),
     dashboardSidebar(
         width = 300,
         textInput("address",
