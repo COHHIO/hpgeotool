@@ -26,9 +26,9 @@ shinyServer(function(input, output) {
         from each state. We plan to maintain it until there is something better or
         it is not needed by anyone. The code for this Shiny app is available
         <a href = \"https://github.com/COHHIO/hptool\">here</a>.
-             <p>For more information about incorporating Racial Equity into the 
-             implementation of your ESG-CV dollars, please visit 
-             <a href =\"https://housingequityframework.org/\">housingequityframework.org</a>."
+        <p>For more information about incorporating Racial Equity into the 
+        implementation of your ESG-CV dollars, please visit 
+        <a href =\"https://housingequityframework.org/\">housingequityframework.org</a>."
     ))
     
     output$instructionsText <- renderUI(
