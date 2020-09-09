@@ -14,7 +14,7 @@
 
 dashboardPage(
     skin = "purple",
-    dashboardHeader(title = "ERA Prioritization Tool"),
+    dashboardHeader(title = "Homelessness Prevention Tool"),
     dashboardSidebar(
         width = 300,
         textInput("address",
