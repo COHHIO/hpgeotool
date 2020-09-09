@@ -1,4 +1,4 @@
-# Emergency Rental Assistance/Prevention Prioritization Tool
+# Homelessness Prevention Geographic Tool
 
 This tool was created and will be maintained by the COHHIO HMIS team based on the work graciously shared by the Urban Institute. Please find their work [here](https://www.urban.org/features/where-prioritize-emergency-rental-assistance-keep-renters-their-homes) and the data and data dictionary [here](https://datacatalog.urban.org/dataset/rental-assistance-priority-index).
 
