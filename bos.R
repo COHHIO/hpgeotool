@@ -15,17 +15,17 @@ index <- read_csv("housing_index_state_adj.csv") %>%
     equity_index_quantile
   ) %>%
   filter(
-state_name == "Ohio"     # &
-    # !county_name %in% c(
-    #   "Mahoning County",
-    #   "Cuyahoga County",
-    #   "Hamilton County",
-    #   "Franklin County",
-    #   "Lucas County",
-    #   "Stark County",
-    #   "Summit County",
-    #   "Montgomery County"
-    # )
+state_name == "Ohio" &
+    !county_name %in% c(
+      "Mahoning County",
+      "Cuyahoga County",
+      "Hamilton County",
+      "Franklin County",
+      "Lucas County",
+      "Stark County",
+      "Summit County",
+      "Montgomery County"
+    )
   )
 
 distribution_total <- hist(index$total_index_quantile)
