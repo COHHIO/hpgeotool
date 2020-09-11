@@ -90,12 +90,16 @@ tbl <- tribble(~col, ~adress.stname, ~adress.suffix, ~adress.city, ~adress.state
                1, "a", "b", "loo", "oh", "3333"
 )
 tbl
+
 foo_uniq <- function(x) length(unique(x)) > 1
+
 ad_test <-
   tbl %>%
   select(starts_with("adress")) %>%
   map_lgl(foo_uniq)
+
 wrong_item <- names(ad_test)[ad_test == TRUE]  
+
 case_when(
   wrong_item == "adress.stname" ~ "state",
   wrong_item == "adress.suffix" ~ "suffix",
