@@ -68,150 +68,9 @@ shinyServer(function(input, output) {
     )
     
     observeEvent(c(input$go), {
+       isolate(address <- tibble(singlelineaddress = c(input$address)))
         
-        output$Housing <- if ({
-            isolate(address <- tibble(singlelineaddress = c(input$address)))
-            
-            nrow(
-                census_full <-
-                address %>%
-                geocode(
-                    address = singlelineaddress,
-                    method = 'census',
-                    full_results = TRUE,
-                    return_type = 'geographies'
-                )
-            ) == 1 &
-                !is.na(census_full$lat[1])
-        }) {
-            renderInfoBox({
-                isolate(address <- tibble(singlelineaddress = c(input$address)))
-                
-                census_full <-
-                    address %>%
-                    geocode(
-                        address = singlelineaddress,
-                        method = 'census',
-                        full_results = TRUE,
-                        return_type = 'geographies'
-                    ) %>%
-                    unnest('geographies.2010 Census Blocks') %>%
-                    mutate(GEOID = substr(GEOID, 1, 11))
-                
-                the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>%
-                    filter(GEOID == the_geocode) %>%
-                    pull(state_name)
-                
-                infoBox(
-                    subtitle = paste("Within", your_state),
-                    title = "Housing Index",
-                    index %>%
-                        filter(GEOID == the_geocode) %>%
-                        pull(housing_index_quantile),
-                    icon = icon("house-user")
-                )
-            })
-        } else{
-        }
-
-        output$COVID19 <- if ({
-            isolate(address <- tibble(singlelineaddress = c(input$address)))
-            
-            nrow(
-                census_full <-
-                address %>%
-                geocode(
-                    address = singlelineaddress,
-                    method = 'census',
-                    full_results = TRUE,
-                    return_type = 'geographies'
-                )
-            ) == 1 &
-                !is.na(census_full$lat[1])
-        }) {
-            renderInfoBox({
-                isolate(address <- tibble(singlelineaddress = c(input$address)))
-                
-                census_full <-
-                    address %>%
-                    geocode(
-                        address = singlelineaddress,
-                        method = 'census',
-                        full_results = TRUE,
-                        return_type = 'geographies'
-                    ) %>%
-                    unnest('geographies.2010 Census Blocks') %>%
-                    mutate(GEOID = substr(GEOID, 1, 11))
-                
-                the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>%
-                    filter(GEOID == the_geocode) %>%
-                    pull(state_name)
-                
-                infoBox(
-                    subtitle = paste("Within", your_state),
-                    title = "COVID Index",
-                    index %>%
-                        filter(GEOID == the_geocode) %>%
-                        pull(covid_index_quantile),
-                    icon = icon("virus")
-                )
-            })
-        } else{
-        }
-
-        output$Equity <- if ({
-            isolate(address <- tibble(singlelineaddress = c(input$address)))
-            
-            nrow(
-                census_full <-
-                address %>%
-                geocode(
-                    address = singlelineaddress,
-                    method = 'census',
-                    full_results = TRUE,
-                    return_type = 'geographies'
-                )
-            ) == 1 &
-                !is.na(census_full$lat[1])
-        }) {
-            renderInfoBox({
-                isolate(address <- tibble(singlelineaddress = c(input$address)))
-                
-                census_full <-
-                    address %>%
-                    geocode(
-                        address = singlelineaddress,
-                        method = 'census',
-                        full_results = TRUE,
-                        return_type = 'geographies'
-                    ) %>%
-                    unnest('geographies.2010 Census Blocks') %>%
-                    mutate(GEOID = substr(GEOID, 1, 11))
-                
-                the_geocode <- census_full %>% pull(GEOID)
-                your_state <- index %>%
-                    filter(GEOID == the_geocode) %>%
-                    pull(state_name)
-                
-                infoBox(
-                    subtitle = paste("Within", your_state),
-                    title = "Equity Index",
-                    index %>%
-                        filter(GEOID == the_geocode) %>%
-                        pull(equity_index_quantile),
-                    icon = icon("balance-scale-left")
-                )
-            })
-        } else{
-        }
-        
-        output$Percentile <- renderInfoBox({
-            
-            isolate(address <-
-                        tibble(singlelineaddress = c(input$address)))
-            
+        one_observation <- nrow(
             census_full <-
                 address %>%
                 geocode(
@@ -220,19 +79,91 @@ shinyServer(function(input, output) {
                     full_results = TRUE,
                     return_type = 'geographies'
                 )
-            
-            nomatch <-  if_else(is.na(census_full$lat),
-                                "No match.",
-                                "ok")
-            nomatch <- nomatch[1]
-            
-            if (nomatch == "ok") {
-                census_full <- census_full %>%
-                    unnest('geographies.2010 Census Blocks') %>%
-                    mutate(GEOID = substr(GEOID, 1, 11))
-            }
-            
-            if (nrow(census_full) == 1 & nomatch == "ok") {
+        ) == 1
+        
+        lat_valid <- !is.na(census_full$lat[1])
+
+        status <- case_when(
+            one_observation == FALSE ~ "insufficient",
+            one_observation == TRUE &
+                lat_valid == TRUE ~ "good",
+            one_observation == TRUE &
+                lat_valid == FALSE ~ "bad",
+            TRUE ~ "contact administrator"
+        )
+        
+        if(status %in% c("good", "insufficient")){census_full <-
+            address %>%
+            geocode(
+                address = singlelineaddress,
+                method = 'census',
+                full_results = TRUE,
+                return_type = 'geographies'
+            ) %>%
+            unnest('geographies.2010 Census Blocks') %>%
+            mutate(GEOID = substr(GEOID, 1, 11))}
+        
+        if (status == "good") {
+            output$Housing <- 
+                renderInfoBox({
+                    
+                    the_geocode <- census_full %>% pull(GEOID)
+                    your_state <- index %>%
+                        filter(GEOID == the_geocode) %>%
+                        pull(state_name)
+                    
+                    infoBox(
+                        subtitle = paste("Within", your_state),
+                        title = "Housing Index",
+                        index %>%
+                            filter(GEOID == the_geocode) %>%
+                            pull(housing_index_quantile),
+                        icon = icon("house-user")
+                    )
+                })
+                
+                output$COVID19 <-
+                    renderInfoBox({
+                        
+                        the_geocode <- census_full %>% pull(GEOID)
+                        your_state <- index %>%
+                            filter(GEOID == the_geocode) %>%
+                            pull(state_name)
+                        
+                        infoBox(
+                            subtitle = paste("Within", your_state),
+                            title = "COVID Index",
+                            index %>%
+                                filter(GEOID == the_geocode) %>%
+                                pull(covid_index_quantile),
+                            icon = icon("virus")
+                        )
+                    })
+                
+                output$Equity <-
+                    renderInfoBox({
+                        
+                        the_geocode <- census_full %>% pull(GEOID)
+                        your_state <- index %>%
+                            filter(GEOID == the_geocode) %>%
+                            pull(state_name)
+                        
+                        infoBox(
+                            subtitle = paste("Within", your_state),
+                            title = "Equity Index",
+                            index %>%
+                                filter(GEOID == the_geocode) %>%
+                                pull(equity_index_quantile),
+                            icon = icon("balance-scale-left")
+                        )
+                    })
+        } else{
+                
+        }
+        
+        output$Percentile <- renderInfoBox({
+
+            if (status == "good") {
                 the_geocode <- census_full %>% pull(GEOID)
                 your_state <- index %>%
                     filter(GEOID == the_geocode) %>%
@@ -248,7 +179,7 @@ shinyServer(function(input, output) {
                     color = "black"
                 )
             } else {
-                if (nomatch == "ok" & nrow(census_full) > 1) {
+                if (status == "insufficient") {
                     insufficient_address <- census_full %>%
                         mutate(
                             DifferentStreetName = if_else(length(
@@ -306,8 +237,8 @@ shinyServer(function(input, output) {
                     )
                 } else{
                     infoBox(
-                        title = nomatch,
-                        subtitle = " Check your address and try again.",
+                        title = "NO MATCH",
+                        subtitle = "Check your address and try again.",
                         icon = icon("times"),
                         color = "fuchsia"
                     )
