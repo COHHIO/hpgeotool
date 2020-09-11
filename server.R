@@ -85,33 +85,31 @@ shinyServer(function(input, output) {
 
         status <- case_when(
             one_observation == FALSE ~ "insufficient",
-            one_observation == TRUE &
-                lat_valid == TRUE ~ "good",
-            one_observation == TRUE &
-                lat_valid == FALSE ~ "bad",
+            one_observation == TRUE & lat_valid == TRUE ~ "good",
+            one_observation == TRUE & lat_valid == FALSE ~ "bad",
             TRUE ~ "contact administrator"
         )
         
-        if(status %in% c("good", "insufficient")){census_full <-
-            address %>%
-            geocode(
-                address = singlelineaddress,
-                method = 'census',
-                full_results = TRUE,
-                return_type = 'geographies'
-            ) %>%
-            unnest('geographies.2010 Census Blocks') %>%
-            mutate(GEOID = substr(GEOID, 1, 11))}
-        
+        if (status %in% c("good", "insufficient")) {
+            census_full <-
+                address %>%
+                geocode(
+                    address = singlelineaddress,
+                    method = 'census',
+                    full_results = TRUE,
+                    return_type = 'geographies'
+                ) %>%
+                unnest('geographies.2010 Census Blocks') %>%
+                mutate(GEOID = substr(GEOID, 1, 11))
+        }
+    
         if (status == "good") {
-            output$Housing <- 
+            output$Housing <-
                 renderInfoBox({
-                    
                     the_geocode <- census_full %>% pull(GEOID)
                     your_state <- index %>%
                         filter(GEOID == the_geocode) %>%
                         pull(state_name)
-                    
                     infoBox(
                         subtitle = paste("Within", your_state),
                         title = "Housing Index",
@@ -180,54 +178,41 @@ shinyServer(function(input, output) {
                 )
             } else {
                 if (status == "insufficient") {
-                    insufficient_address <- census_full %>%
-                        mutate(
-                            DifferentStreetName = if_else(length(
-                                unique(addressComponents.streetName)
-                            ) > 1,
-                            "Street Name", NULL),
-                            DifferentStreetSuffix = if_else(
-                                length(unique(addressComponents.suffixType)) > 1,
-                                "Street Suffix (for example: Ave, Street, Way)",
-                                NULL
-                            ),
-                            DifferentSuffixDirection = if_else(
-                                length(unique(
-                                    addressComponents.suffixDirection
-                                )) > 1,
-                                "Street Direction (for example: N, W)",
-                                NULL
-                            ),
-                            DifferentSuffixQualifier = if_else(length(
-                                unique(addressComponents.suffixQualifier)
-                            ) > 1,
-                            "Suffix Qualifier", NULL),
-                            DifferentCity = if_else(length(unique(
-                                addressComponents.city
-                            )) > 1,
-                            "City", NULL),
-                            DifferentState = if_else(length(
-                                unique(addressComponents.state)
-                            ) > 1,
-                            "State", NULL),
-                            DifferentZIP = if_else(length(unique(
-                                addressComponents.zip
-                            )) > 1,
-                            "ZIP Code", NULL),
-                            WhatToCheck = paste(
-                                "Please check your",
-                                na.omit(DifferentStreetName),
-                                na.omit(DifferentStreetSuffix),
-                                na.omit(DifferentSuffixQualifier),
-                                na.omit(DifferentSuffixDirection),
-                                na.omit(DifferentCity),
-                                na.omit(DifferentState),
-                                na.omit(DifferentZIP)
-                            )
-                        ) %>%
-                        pull(WhatToCheck) %>%
-                        unique() %>%
-                        str_squish()
+                    difference <- function(x) length(unique(x)) > 1
+                    
+                    address_check <- census_full %>%
+                        select(starts_with("addressComponents")) %>%
+                        map_dbl(difference)
+                    
+                    to_check <- names(address_check)[address_check == 1]
+                    
+                    friendly_names <- case_when(
+                        to_check == "addressComponents.preQualifier" ~ 
+                            "Pre-Qualifier, like \"Old\", \"New\"",
+                        to_check == "addressComponents.preDirection" ~
+                            "Direction, like \"North\", \"SW\"",
+                        to_check == "addressComponents.preType" ~
+                            "Type, like \"Route\", \"US HWY\", or \"Via\"",
+                        to_check == "addressComponents.streetName" ~
+                            "Street",
+                        to_check == "addressComponents.suffixType" ~
+                            "Suffix, like \"Street\" or \"Blvd\"",
+                        to_check == "addressComponents.suffixDirection" ~
+                            "Direction, like \"North\", \"SW\"",
+                        to_check == "addressComponents.suffixQualifier" ~
+                            "Post-Qualifier, like \"Bypass\", \"Private\"",
+                        to_check == "addressComponents.city" ~
+                            "City",
+                        to_check == "addressComponents.state" ~
+                            "State",
+                        to_check == "addressComponents.zip" ~
+                            "ZIP"
+                    )
+                    
+                    insufficient_address <-
+                        paste("Please check your",
+                              paste(friendly_names,
+                                    collapse = " & "))
                     
                     infoBox(
                         title = "Error",
