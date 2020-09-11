@@ -83,3 +83,22 @@ nrow(
     )
 ) == 1 &
   !is.na(census_full$lat[1])
+
+tbl <- tribble(~col, ~adress.stname, ~adress.suffix, ~adress.city, ~adress.state, ~adress.zip,
+               1, "a", "b", "foo", "oh", "3333",
+               1, "a", "c", "boo", "oh", "3333",
+               1, "a", "b", "loo", "oh", "3333"
+)
+tbl
+foo_uniq <- function(x) length(unique(x)) > 1
+ad_test <-
+  tbl %>%
+  select(starts_with("adress")) %>%
+  map_lgl(foo_uniq)
+wrong_item <- names(ad_test)[ad_test == TRUE]  
+case_when(
+  wrong_item == "adress.stname" ~ "state",
+  wrong_item == "adress.suffix" ~ "suffix",
+  wrong_item == "adress.city" ~ "city",
+  wrong_item == "adress.zip" ~ "zip") -> wrong_msg
+paste("Wrong", paste(wrong_msg, collapse = " & "))
