@@ -32,15 +32,15 @@ dashboardPage(
     ),
     dashboardBody(fluidRow(
         box(
-            width = 6,
+            width = 9,
             uiOutput("Percentile",
-                          width = 6),
+                          width = 9),
             uiOutput("Housing",
-                          width = 6),
+                          width = 9),
             uiOutput("COVID19",
-                          width = 6),
+                          width = 9),
             uiOutput("Equity",
-                          width = 6)
+                          width = 9)
         )
     ),
     fluidRow(box(
@@ -48,21 +48,21 @@ dashboardPage(
         title = "Instructions",
         collapsible = TRUE,
         collapsed = FALSE,
-        width = 6
+        width = 9
     )),
     fluidRow(box(
         uiOutput("aboutText"),
         title = "About",
         collapsible = TRUE,
         collapsed = TRUE,
-        width = 6
+        width = 9
     )),
     fluidRow(box(
         uiOutput("citationsText"),
         title = "Citations",
         collapsible = TRUE,
         collapsed = TRUE,
-        width = 6
+        width = 9
     )))
 )
 
