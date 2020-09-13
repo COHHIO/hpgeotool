@@ -34,8 +34,7 @@ shinyServer(function(input, output) {
     output$instructionsText <- renderUI(
         HTML("Enter a complete and correct address into the left sidebar and click 
              Submit. If you do not see the left sidebar, click the triple-line 
-             button above. Depending on the address, it may take up to 10 seconds
-             to see a result so please be patient."
+             button above."
         ))
     
     output$citationsText <- renderUI(
@@ -70,6 +69,8 @@ shinyServer(function(input, output) {
     observeEvent(c(input$go), {
        isolate(address <- tibble(singlelineaddress = c(input$address)))
         
+        withProgress(message = "Looking for your address", {
+            
         one_observation <- nrow(
             census_full <-
                 address %>%
@@ -230,6 +231,7 @@ shinyServer(function(input, output) {
                 }
             }
         })
+        {incProgress(1/2)}})
     }, 
     ignoreInit = TRUE)
 })
