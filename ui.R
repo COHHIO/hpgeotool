@@ -17,20 +17,21 @@ dashboardPage(
     dashboardHeader(title = "Homelessness Prevention Geographic Tool",
                     titleWidth = 425),
     dashboardSidebar(
-        width = 300,
+        width = 425,
         textInput("address",
-                  "Enter full address:"),
-        actionButton("go", "Submit"),
-        br(),
-        br(),
-        br(),
-        br(),
+                  "Enter full address:",
+                  width = 425),
+        actionButton("go", "Submit", 
+            style = "background-color: #7975bf; color: white;border-color: #7975bf;"),
         HTML(paste0(
-            "&emsp;&emsp;&emsp;Made by <br>&emsp;&emsp;<img src=\"COHHIOlogo_white.png\" 
-            alt=\"COHHIO logo\" width=\"80\" height=\"80\"> "
+            "<div class=\"sidebar__logo-wrap\"><span>Made by</span><img src=\"COHHIOlogo_white.png\" 
+            alt=\"COHHIO logo\" width=\"80\" height=\"80\"></div>"
         ))
     ),
-    dashboardBody(fluidRow(
+    dashboardBody(
+        tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+        ),
+        fluidRow(
         box(
             width = 9,
             uiOutput("Percentile",
