@@ -21,50 +21,48 @@ dashboardPage(
         textInput("address",
                   "Enter full address:",
                   width = 425),
-        actionButton("go", "Submit", 
-            style = "background-color: #7975bf; color: white;border-color: #7975bf;"),
-        HTML(paste0(
-            "<div class=\"sidebar__logo-wrap\"><span>Made by</span><img src=\"COHHIOlogo_white.png\" 
+        actionButton("go", "Submit",
+                     style = "background-color: #7975bf; color: white;border-color: #7975bf;"),
+        HTML(
+            paste0(
+                "<div class=\"sidebar__logo-wrap\"><span>Made by</span><img src=\"COHHIOlogo_white.png\"
             alt=\"COHHIO logo\" width=\"80\" height=\"80\"></div>"
-        ))
-    ),
-    dashboardBody(
-        tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-        ),
-        fluidRow(
-        box(
-            width = 9,
-            uiOutput("Percentile",
-                          width = 9),
-            uiOutput("Housing",
-                          width = 9),
-            uiOutput("COVID19",
-                          width = 9),
-            uiOutput("Equity",
-                          width = 9)
+            )
         )
     ),
-    fluidRow(box(
-        uiOutput("instructionsText"),
-        title = "Instructions",
-        collapsible = TRUE,
-        collapsed = FALSE,
-        width = 9
-    )),
-    fluidRow(box(
-        uiOutput("aboutText"),
-        title = "About",
-        collapsible = TRUE,
-        collapsed = TRUE,
-        width = 9
-    )),
-    fluidRow(box(
-        uiOutput("citationsText"),
-        title = "Citations",
-        collapsible = TRUE,
-        collapsed = TRUE,
-        width = 9
-    )))
+    dashboardBody(
+        tags$head(
+            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+        ),
+        fluidRow(box(verticalLayout(uiOutput("Percentile"),
+                           uiOutput("subIndices")),
+            width = 9)), 
+        fluidRow(
+            box(
+                uiOutput("instructionsText"),
+                title = "Instructions",
+                collapsible = TRUE,
+                collapsed = FALSE,
+                width = 9
+            )
+        ),
+        fluidRow(
+            box(
+                uiOutput("aboutText"),
+                title = "About",
+                collapsible = TRUE,
+                collapsed = TRUE,
+                width = 9
+            )
+        ),
+        fluidRow(
+            box(
+                uiOutput("citationsText"),
+                title = "Citations",
+                collapsible = TRUE,
+                collapsed = TRUE,
+                width = 9
+            )
+        )
+    )
 )
-
-
