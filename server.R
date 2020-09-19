@@ -90,25 +90,29 @@ shinyServer(function(input, output) {
             
             status <- case_when(
                 one_observation == FALSE ~ "insufficient",
-                one_observation == TRUE & lat_valid == TRUE ~ "good",
-                one_observation == TRUE & lat_valid == FALSE ~ "bad",
+                one_observation == TRUE &
+                    lat_valid == TRUE ~ "good",
+                one_observation == TRUE &
+                    lat_valid == FALSE ~ "bad",
                 TRUE ~ "contact administrator"
             )
             
             # if the address is "bad", the census blocks can't be unnested
-            if(status != "bad") {census <-
-                census_full %>%
-                unnest('geographies.2010 Census Blocks') %>%
-                mutate(GEOID = substr(GEOID, 1, 11))}
+            if (status != "bad") {
+                census <-
+                    census_full %>%
+                    unnest('geographies.2010 Census Blocks') %>%
+                    mutate(GEOID = substr(GEOID, 1, 11))
+            }
+            
+            the_geocode <-
+                reactive(census %>% pull(GEOID))
+            
+            your_state <- reactive(index %>%
+                                       filter(GEOID == the_geocode()) %>%
+                                       pull(state_name))
             
             if (status == "good") {
-                the_geocode <-
-                    reactive(census %>% pull(GEOID))
-                
-                your_state <- reactive(index %>%
-                                           filter(GEOID == the_geocode()) %>%
-                                           pull(state_name))
-                
                 output$subIndices <-
                     renderUI({
                         list(
@@ -146,16 +150,12 @@ shinyServer(function(input, output) {
             
             output$Percentile <- renderUI({
                 if (status == "good") {
-                    the_geocode <- census %>% pull(GEOID)
-                    your_state <- index %>%
-                        filter(GEOID == the_geocode) %>%
-                        pull(state_name)
                     
                     infoBox(
-                        subtitle = paste("Within", your_state),
+                        subtitle = paste("Within", your_state()),
                         title = "Total Index",
                         index %>%
-                            filter(GEOID == the_geocode) %>%
+                            filter(GEOID == the_geocode()) %>%
                             pull(total_index_quantile),
                         icon = icon("map-marker-alt"),
                         color = "black",
