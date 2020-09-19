@@ -95,6 +95,7 @@ shinyServer(function(input, output) {
                 TRUE ~ "contact administrator"
             )
             
+            # if the address is "bad", the census blocks can't be unnested
             if(status != "bad") {census <-
                 census_full %>%
                 unnest('geographies.2010 Census Blocks') %>%
@@ -157,7 +158,8 @@ shinyServer(function(input, output) {
                             filter(GEOID == the_geocode) %>%
                             pull(total_index_quantile),
                         icon = icon("map-marker-alt"),
-                        color = "black"
+                        color = "black",
+                        width = 12
                     )
                 } else {
                     if (status == "insufficient") {
