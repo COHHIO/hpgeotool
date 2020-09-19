@@ -71,10 +71,11 @@ shinyServer(function(input, output) {
         )
     )
     
-    observeEvent(c(input$go), {
-        isolate(address <- tibble(singlelineaddress = c(input$address)))
+    observeEvent(input$go, {
+        address <- tibble(singlelineaddress = c(input$address))
         
         withProgress(message = "Looking for your address", {
+            
             one_observation <- nrow(
                 census_full <-
                     address %>%
