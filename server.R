@@ -72,13 +72,13 @@ shinyServer(function(input, output) {
     )
     
     observeEvent(input$go, {
-        address <- tibble(singlelineaddress = c(input$address))
+        address <- reactive(tibble(singlelineaddress = c(input$address)))
         
         withProgress(message = "Looking for your address", {
             
             one_observation <- nrow(
                 census_full <-
-                    address %>%
+                    address() %>%
                     geocode(
                         address = singlelineaddress,
                         method = 'census',
