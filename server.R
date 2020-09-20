@@ -113,111 +113,112 @@ shinyServer(function(input, output) {
                                        filter(GEOID == the_geocode()) %>%
                                        pull(state_name))
             
-            if (status == "good") {
-                output$subIndices <-
-                    renderUI({
-                        list(
-                            infoBox(
-                                subtitle = paste("Within", your_state()),
-                                title = "Housing Index",
-                                index %>%
-                                    filter(GEOID == the_geocode()) %>%
-                                    pull(housing_index_quantile),
-                                icon = icon("house-user")
-                            ),
-                            
-                            infoBox(
-                                subtitle = paste("Within", your_state()),
-                                title = "COVID Index",
-                                index %>%
-                                    filter(GEOID == the_geocode()) %>%
-                                    pull(covid_index_quantile),
-                                icon = icon("virus")
-                            ),
-                            
-                            infoBox(
-                                subtitle = paste("Within", your_state()),
-                                title = "Equity Index",
-                                index %>%
-                                    filter(GEOID == the_geocode()) %>%
-                                    pull(equity_index_quantile),
-                                icon = icon("balance-scale-left")
-                            )
-                        )
-                    })
-            } else{
-                
-            }
-            
-            output$Percentile <- renderUI({
+            output$Indices <- renderUI({
                 if (status == "good") {
-                    
-                    infoBox(
-                        subtitle = paste("Within", your_state()),
-                        title = "Total Index",
-                        index %>%
-                            filter(GEOID == the_geocode()) %>%
-                            pull(total_index_quantile),
-                        icon = icon("map-marker-alt"),
-                        color = "black",
-                        width = 12
-                    )
-                } else {
-                    if (status == "insufficient") {
-                        difference <- function(x)
-                            length(unique(x)) > 1
-                        
-                        address_check <- census %>%
-                            select(starts_with("addressComponents")) %>%
-                            map_dbl(difference)
-                        
-                        to_check <-
-                            names(address_check)[address_check == 1]
-                        
-                        friendly_names <- case_when(
-                            to_check == "addressComponents.preQualifier" ~
-                                "Pre-Qualifier, like \"Old\", \"New\"",
-                            to_check == "addressComponents.preDirection" ~
-                                "Direction, like \"North\", \"SW\"",
-                            to_check == "addressComponents.preType" ~
-                                "Type, like \"Route\", \"US HWY\", or \"Via\"",
-                            to_check == "addressComponents.streetName" ~
-                                "Street",
-                            to_check == "addressComponents.suffixType" ~
-                                "Suffix, like \"Street\" or \"Blvd\"",
-                            to_check == "addressComponents.suffixDirection" ~
-                                "Direction, like \"North\", \"SW\"",
-                            to_check == "addressComponents.suffixQualifier" ~
-                                "Post-Qualifier, like \"Bypass\", \"Private\"",
-                            to_check == "addressComponents.city" ~
-                                "City",
-                            to_check == "addressComponents.state" ~
-                                "State",
-                            to_check == "addressComponents.zip" ~
-                                "ZIP"
-                        )
-                        
-                        insufficient_address <-
-                            paste("Please check your",
-                                  paste(friendly_names,
-                                        collapse = " & "))
+                    list(
+                        infoBox(
+                            subtitle = paste("Within", your_state()),
+                            title = "Total Index",
+                            index %>%
+                                filter(GEOID == the_geocode()) %>%
+                                pull(total_index_quantile),
+                            icon = icon("map-marker-alt"),
+                            color = "black",
+                            width = 12
+                        ),
+                        infoBox(
+                            subtitle = paste("Within", your_state()),
+                            title = "Housing Index",
+                            index %>%
+                                filter(GEOID == the_geocode()) %>%
+                                pull(housing_index_quantile),
+                            icon = icon("house-user")
+                        ),
                         
                         infoBox(
-                            title = "Error",
-                            subtitle = print(insufficient_address),
-                            icon = icon("times"),
-                            color = "orange"
+                            subtitle = paste("Within", your_state()),
+                            title = "COVID Index",
+                            index %>%
+                                filter(GEOID == the_geocode()) %>%
+                                pull(covid_index_quantile),
+                            icon = icon("virus")
+                        ),
+                        
+                        infoBox(
+                            subtitle = paste("Within", your_state()),
+                            title = "Equity Index",
+                            index %>%
+                                filter(GEOID == the_geocode()) %>%
+                                pull(equity_index_quantile),
+                            icon = icon("balance-scale-left")
                         )
-                    } else{
-                        if (status == "bad") {
-                            infoBox(
-                                title = "NO MATCH",
-                                subtitle = "Check your address and try again.",
-                                icon = icon("times"),
-                                color = "fuchsia"
-                            )
-                        }
-                    }
+                    )
+                } else{
+                    
+                }
+            })
+            
+            output$Insufficient <- renderUI({
+                if (status == "insufficient") {
+                    difference <- function(x)
+                        length(unique(x)) > 1
+                    
+                    address_check <- census %>%
+                        select(starts_with("addressComponents")) %>%
+                        map_dbl(difference)
+                    
+                    to_check <-
+                        names(address_check)[address_check == 1]
+                    
+                    friendly_names <- case_when(
+                        to_check == "addressComponents.preQualifier" ~
+                            "Pre-Qualifier, like \"Old\", \"New\"",
+                        to_check == "addressComponents.preDirection" ~
+                            "Direction, like \"North\", \"SW\"",
+                        to_check == "addressComponents.preType" ~
+                            "Type, like \"Route\", \"US HWY\", or \"Via\"",
+                        to_check == "addressComponents.streetName" ~
+                            "Street",
+                        to_check == "addressComponents.suffixType" ~
+                            "Suffix, like \"Street\" or \"Blvd\"",
+                        to_check == "addressComponents.suffixDirection" ~
+                            "Direction, like \"North\", \"SW\"",
+                        to_check == "addressComponents.suffixQualifier" ~
+                            "Post-Qualifier, like \"Bypass\", \"Private\"",
+                        to_check == "addressComponents.city" ~
+                            "City",
+                        to_check == "addressComponents.state" ~
+                            "State",
+                        to_check == "addressComponents.zip" ~
+                            "ZIP"
+                    )
+                    
+                    insufficient_address <-
+                        paste("Please check your",
+                              paste(friendly_names,
+                                    collapse = " & "))
+                    
+                    infoBox(
+                        title = "Error",
+                        subtitle = print(insufficient_address),
+                        icon = icon("times"),
+                        color = "orange"
+                    )
+                } else{
+                }
+            })
+            
+            output$Garbage <- renderUI({
+                if (status == "bad") {
+                    infoBox(
+                        title = "NO MATCH",
+                        subtitle = "Check your address and try again.",
+                        icon = icon("times"),
+                        color = "fuchsia"
+                    )
+                    
+                } else{
+                    
                 }
             })
             {

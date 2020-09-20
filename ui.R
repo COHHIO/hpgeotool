@@ -34,9 +34,10 @@ dashboardPage(
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
-        fluidRow(box(verticalLayout(uiOutput("Percentile"),
-                           uiOutput("subIndices")),
-            width = 9)), 
+        fluidRow(box(uiOutput("Indices"),
+                     uiOutput("Garbage"),
+                     uiOutput("Insufficient"),
+                     width = 9)), 
         fluidRow(
             box(
                 uiOutput("instructionsText"),
