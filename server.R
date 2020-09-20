@@ -202,7 +202,8 @@ shinyServer(function(input, output) {
                         title = "Error",
                         subtitle = print(insufficient_address),
                         icon = icon("times"),
-                        color = "orange"
+                        color = "orange",
+                        width = 12
                     )
                 } else{
                 }
@@ -214,7 +215,8 @@ shinyServer(function(input, output) {
                         title = "NO MATCH",
                         subtitle = "Check your address and try again.",
                         icon = icon("times"),
-                        color = "fuchsia"
+                        color = "fuchsia",
+                        width = 12
                     )
                     
                 } else{
