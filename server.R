@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
                         address = singlelineaddress,
                         method = 'census',
                         full_results = TRUE,
-                        return_type = 'geographies'
+                        api_options = list(census_return_type = 'geographies')
                     )
             ) == 1
             
@@ -102,7 +102,7 @@ shinyServer(function(input, output) {
             if (status != "bad") {
                 census <-
                     census_full %>%
-                    unnest('geographies.2010 Census Blocks') %>%
+                    unnest('geographies.2020 Census Blocks') %>%
                     mutate(GEOID = substr(GEOID, 1, 11))
             }
             

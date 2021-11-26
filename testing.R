@@ -1,3 +1,4 @@
+
 address <- tibble(singlelineaddress = c(""))
 
 census_full <-
@@ -6,8 +7,8 @@ census_full <-
     address = singlelineaddress,
     method = 'census',
     full_results = TRUE,
-    return_type = 'geographies'
-  ) 
+    api_options = list(census_return_type = 'geographies')
+  )
 
 nomatch <-  if_else(is.na(census_full$lat),
                     "No match. Please check your address and try again.",
@@ -17,7 +18,7 @@ nomatch <- nomatch[1]
 
 if(nomatch == "ok") {
   census_full <- census_full %>%
-    unnest('geographies.2010 Census Blocks') %>%
+    unnest('geographies.2020 Census Blocks') %>%
     mutate(GEOID = substr(GEOID, 1, 11))
 }
 
@@ -106,3 +107,12 @@ case_when(
   wrong_item == "adress.city" ~ "city",
   wrong_item == "adress.zip" ~ "zip") -> wrong_msg
 paste("Wrong", paste(wrong_msg, collapse = " & "))
+
+index %>%
+  filter(GEOID == "390490093942002") %>%
+  pull(equity_index_quantile)
+
+
+
+
+

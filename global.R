@@ -36,3 +36,4 @@ index <- read_csv("housing_index_state_adj.csv") %>%
     housing_index_quantile = paste(ordinal(housing_index_quantile * 100), "percentile")
   )
 
+
