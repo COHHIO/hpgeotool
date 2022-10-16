@@ -12,6 +12,9 @@
 # GNU Affero General Public License for more details at
 # <https://www.gnu.org/licenses/>.
 
+# data comes from: 
+# https://datacatalog.urban.org/dataset/rental-assistance-priority-index/resource/181f439f-fdff-499f-9e02-cae969a34188
+
 library(shinydashboard)
 library(shiny)
 library(shinyWidgets)
