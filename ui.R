@@ -15,12 +15,12 @@
 dashboardPage(
     skin = "purple",
     dashboardHeader(title = "Homelessness Prevention Geographic Tool",
-                    titleWidth = 425),
+                    titleWidth = 300),
     dashboardSidebar(
-        width = 425,
+        width = 300,
         textInput("address",
                   "Enter full address:",
-                  width = 425),
+                  width = 300),
         actionButton("go", "Submit",
                      style = "background-color: #7975bf; color: white;border-color: #7975bf;"),
         HTML(
@@ -34,17 +34,16 @@ dashboardPage(
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
-        fluidRow(box(uiOutput("Indices"),
-                     uiOutput("Garbage"),
-                     uiOutput("Insufficient"),
-                     width = 9)), 
+        fluidRow(uiOutput("Indices")),
+        fluidRow(uiOutput("Garbage")),
+        fluidRow(uiOutput("Insufficient")), 
         fluidRow(
             box(
                 uiOutput("instructionsText"),
                 title = "Instructions",
                 collapsible = TRUE,
                 collapsed = FALSE,
-                width = 9
+                width = 12
             )
         ),
         fluidRow(
@@ -53,7 +52,7 @@ dashboardPage(
                 title = "About",
                 collapsible = TRUE,
                 collapsed = TRUE,
-                width = 9
+                width = 12
             )
         ),
         fluidRow(
@@ -62,7 +61,7 @@ dashboardPage(
                 title = "Citations",
                 collapsible = TRUE,
                 collapsed = TRUE,
-                width = 9
+                width = 12
             )
         )
     )
