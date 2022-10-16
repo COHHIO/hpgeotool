@@ -42,15 +42,15 @@ shinyServer(function(input, output) {
     
     output$citationsText <- renderUI(
         HTML(
-            "<p>Urban Institute. 2020. Rental Assistance Priority Index.
+            "<p>Urban Institute. 2021 Rental Assistance Priority Index.
         Accessible from
         <a href = \"https://datacatalog.urban.org/dataset/rental-assistance-priority-index\">here</a>.
-        Data originally sourced from 2014-18 ACS, July 2020 update of the Urban
-        Institute’s “Where Low-Income Jobs Are Being Lost to COVID-19” data tool,
-        and the 2012–16 US Department of Housing and Urban Developments
-        Comprehensive Housing Affordability Strategy data data.
-        Developed at the Urban Institute, and made available under the ODC-BY
-        1.0 Attribution License. </p>
+        Data originally sourced from 2015-19 ACS, March 2021 update of the Urban 
+        Institute’s “Where Low-Income Jobs Are Being Lost to COVID-19” data tool, 
+        and the 2013–17 US Department of Housing and Urban Developments 
+        Comprehensive Housing Affordability Strategy data. Developed at the 
+        Urban Institute, and made available under the ODC-BY 1.0 Attribution 
+        License.</p>
 
         <p>Wickham et al., (2019). Welcome to the
         <a href=\"https://doi.org/10.21105/joss.01686\">tidyverse</a>. Journal
@@ -122,7 +122,7 @@ shinyServer(function(input, output) {
                             index %>%
                                 filter(GEOID == the_geocode()) %>%
                                 pull(total_index_quantile),
-                            icon = icon("map-marker-alt"),
+                            icon = icon("location-dot"),
                             color = "black",
                             width = 12
                         ),
@@ -134,7 +134,6 @@ shinyServer(function(input, output) {
                                 pull(housing_index_quantile),
                             icon = icon("house-user")
                         ),
-                        
                         infoBox(
                             subtitle = paste("Within", your_state()),
                             title = "COVID Index",
@@ -143,14 +142,13 @@ shinyServer(function(input, output) {
                                 pull(covid_index_quantile),
                             icon = icon("virus")
                         ),
-                        
                         infoBox(
                             subtitle = paste("Within", your_state()),
                             title = "Equity Index",
                             index %>%
                                 filter(GEOID == the_geocode()) %>%
                                 pull(equity_index_quantile),
-                            icon = icon("balance-scale-left")
+                            icon = icon("scale-unbalanced")
                         )
                     )
                 } else{
