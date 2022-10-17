@@ -32,13 +32,6 @@ shinyServer(function(input, output) {
         <a href =\"https://housingequityframework.org/\">housingequityframework.org</a>."
         )})
     
-    output$instructionsText <- renderUI({
-        HTML(
-            "Enter a complete and correct address into the left sidebar and click
-             Submit. If you do not see the left sidebar, click the triple-line
-             button above."
-        )})
-    
     output$citationsText <- renderUI({
         HTML(
             "<p>Urban Institute. 2021 Rental Assistance Priority Index.

@@ -38,15 +38,6 @@ dashboardPage(
           width = 12)),
         fluidRow(
             box(
-                uiOutput("instructionsText"),
-                title = "Instructions",
-                collapsible = TRUE,
-                collapsed = FALSE,
-                width = 12
-            )
-        ),
-        fluidRow(
-            box(
                 uiOutput("aboutText"),
                 title = "About",
                 collapsible = TRUE,
