@@ -13,7 +13,8 @@
 # <https://www.gnu.org/licenses/>.
 
 shinyServer(function(input, output) {
-    output$aboutText <- renderUI(
+  
+    output$aboutText <- renderUI({
         HTML(
             "<p>This tool was built by COHHIO and is using the data from the Urban
         Institute's
@@ -29,18 +30,16 @@ shinyServer(function(input, output) {
         <p>For more information about incorporating Racial Equity into the
         implementation of your ESG-CV dollars, please visit
         <a href =\"https://housingequityframework.org/\">housingequityframework.org</a>."
-        )
-    )
+        )})
     
-    output$instructionsText <- renderUI(
+    output$instructionsText <- renderUI({
         HTML(
             "Enter a complete and correct address into the left sidebar and click
              Submit. If you do not see the left sidebar, click the triple-line
              button above."
-        )
-    )
+        )})
     
-    output$citationsText <- renderUI(
+    output$citationsText <- renderUI({
         HTML(
             "<p>Urban Institute. 2021 Rental Assistance Priority Index.
         Accessible from
@@ -68,8 +67,7 @@ shinyServer(function(input, output) {
         Geocoding Made Easy. R package version 1.0.1.</p>
 
         <p>Please send inquiries to the <a href = \"mailto:hmis@cohhio.org.\">COHHIO HMIS team</a>."
-        )
-    )
+        )})
     
     observeEvent(input$go, {
         address <- reactive(tibble(singlelineaddress = c(input$address)))
@@ -199,7 +197,7 @@ shinyServer(function(input, output) {
                     infoBox(
                         title = "Error",
                         subtitle = print(insufficient_address),
-                        icon = icon("times"),
+                        icon = icon("xmark"),
                         color = "orange",
                         width = 12
                     )
@@ -212,7 +210,7 @@ shinyServer(function(input, output) {
                     infoBox(
                         title = "NO MATCH",
                         subtitle = "Check your address and try again.",
-                        icon = icon("times"),
+                        icon = icon("xmark"),
                         color = "fuchsia",
                         width = 12
                     )
@@ -220,6 +218,46 @@ shinyServer(function(input, output) {
                 } else{
                     
                 }
+            })
+            
+            output$Interpret <- renderUI({
+              if(status == "good")
+                HTML(paste(
+                  "PLEASE NOTE: The Rental Assistance Priority Index and its 
+                  subindexes are built on historical census data and estimates 
+                  that may not capture the current need in each neighborhood. We
+                  recommend using this tool in conjunction with a community-based 
+                  process that includes examining local homelessness data and 
+                  engaging stakeholders from groups and neighborhoods that local 
+                  data show are disproportionately represented in evictions, 
+                  homelessness, and COVID-19 infection and mortality. The higher 
+                  the percentile, the higher the priority.<p><p>",
+                  "The address entered is in census tract",
+                  the_geocode(),
+                  ". This census tract's Rental Assistance Priority Index is",
+                  index %>%
+                    filter(GEOID == the_geocode()) %>%
+                    pull(total_index_quantile) %>%
+                    as.character(),
+                  ". This index is comprised of three subindexes:<p>
+                  <ul><li>The Housing Index</li>
+                  <li>The Covid Index</li>
+                  <li>The Equity Index</li></ul>
+                  <p>The census tract your address is located in has a Housing
+                  Index of",
+                  index %>%
+                    filter(GEOID == the_geocode()) %>%
+                    pull(housing_index_quantile),
+                  ". This index represents the extent to which renters in your 
+                  census tract are living in poverty, are severely cost-burdened 
+                  and low-income, whose annual incomes are less than $35,000 and 
+                  pay 50 percent or more of their incomes in gross rent, the area 
+                  has a higher percent of renter-occupied housing units,
+
+ severely overcrowded households: percentage of renter-occupied households with more
+than 1.5 occupants per room  Share of unemployed people"
+                ))
+                
             })
             {
                 incProgress(1 / 2)

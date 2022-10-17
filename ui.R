@@ -14,29 +14,28 @@
 
 dashboardPage(
     skin = "purple",
-    dashboardHeader(title = "Homelessness Prevention Geographic Tool",
-                    titleWidth = 300),
-    dashboardSidebar(
-        width = 300,
-        textInput("address",
-                  "Enter full address:",
-                  width = 300),
-        actionButton("go", "Submit",
-                     style = "background-color: #7975bf; color: white;border-color: #7975bf;"),
-        HTML(
-            paste0(
-                "<div class=\"sidebar__logo-wrap\"><span>Made by</span><img src=\"COHHIOlogo_white.png\"
-            alt=\"COHHIO logo\" width=\"80\" height=\"80\"></div>"
-            )
-        )
-    ),
+    dashboardHeader(title = "Homelessness Prevention Geographic Tool"),
+    dashboardSidebar(disable = TRUE),
     dashboardBody(
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
+        fluidRow(box(
+          title = "Enter a residential address",
+          textInput("address", "Address must have all elements: Street address,
+                    City, State, and the correct ZIP"),
+          actionButton(
+            "go", 
+            "Submit",
+            style = "background-color: #7975bf; color: white;border-color: #7975bf;"),
+        width = 12)),
         fluidRow(uiOutput("Indices")),
         fluidRow(uiOutput("Garbage")),
         fluidRow(uiOutput("Insufficient")), 
+        fluidRow(box(
+          title = "Interpretation",
+          uiOutput("Interpret"), 
+          width = 12)),
         fluidRow(
             box(
                 uiOutput("instructionsText"),
